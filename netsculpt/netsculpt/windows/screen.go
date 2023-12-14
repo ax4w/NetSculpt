@@ -73,6 +73,9 @@ func controlsField(a *tview.Application) *tview.Flex {
 
 	compute := tview.NewButton("Compute")
 	compute.SetSelectedFunc(func() {
+		if result {
+			return
+		}
 		t.SetSelectable(false, false)
 		if core.StartingIP.IsAllZeros() {
 			return
