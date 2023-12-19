@@ -12,6 +12,7 @@ var (
 	configData = []string{"Name", "Hosts"}
 	offset     = 2
 	t          = tview.NewTable()
+	hflex      = tview.NewFlex()
 	result     = false
 )
 
@@ -36,11 +37,13 @@ func startingIpInput() *tview.Flex {
 		SetFieldWidth(inputWidth).
 		SetPlaceholder("E.g. 8").
 		SetAcceptanceFunc(prefixInputValidator)
-	var hflex = tview.NewFlex()
 	hflex.SetTitle("Starting IP (" + core.StartingIP.ToString() + ")")
 	hflex.SetBorder(true)
 	set := tview.NewButton("Set")
 	set.SetSelectedFunc(func() {
+		if result {
+			return
+		}
 		a, _ := strconv.Atoi(first.GetText())
 		b, _ := strconv.Atoi(second.GetText())
 		c, _ := strconv.Atoi(third.GetText())
@@ -71,6 +74,17 @@ func controlsField(a *tview.Application) *tview.Flex {
 		a.Stop()
 	})
 
+	reset := tview.NewButton("Reset")
+	reset.SetSelectedFunc(func() {
+		core.SetStartingIP([]int{0, 0, 0, 0}, 0)
+		hflex.SetTitle("Starting IP (" + core.StartingIP.ToString() + ")")
+		configData = []string{"Name", "Hosts"}
+		offset = 2
+		result = false
+		setTableData()
+
+	})
+
 	compute := tview.NewButton("Compute")
 	compute.SetSelectedFunc(func() {
 		if result {
@@ -95,15 +109,18 @@ func controlsField(a *tview.Application) *tview.Flex {
 		}
 		configData = newConfig
 		offset = 6
-		result = true
 		setTableData()
+		result = true
+
 	})
 	var hflex = tview.NewFlex()
 	hflex.SetTitle("Actions")
 	hflex.SetBorder(true)
-	hflex.AddItem(quit, 0, 1, false)
+	hflex.AddItem(quit, 0, 2, false)
 	hflex.AddItem(newText(""), 0, 1, false)
-	hflex.AddItem(compute, 0, 1, false)
+	hflex.AddItem(reset, 0, 2, false)
+	hflex.AddItem(newText(""), 0, 1, false)
+	hflex.AddItem(compute, 0, 2, false)
 	return hflex
 }
 
@@ -158,6 +175,9 @@ func addInput(a *tview.Application) *tview.Flex {
 		SetPlaceholder("Name")
 	add := tview.NewButton("Add")
 	add.SetSelectedFunc(func() {
+		if result {
+			return
+		}
 		if len(hosts.GetText()) == 0 || len(Name.GetText()) == 0 {
 			return
 		}
