@@ -7,7 +7,7 @@ import (
 
 type IP struct {
 	v      map[int]int
-	Prefix int
+	Suffix int
 }
 
 type Data struct {
@@ -32,7 +32,7 @@ func (ip *IP) ToString() string {
 			str += fmt.Sprintf("%d", ip.v[i])
 		}
 	}
-	str += fmt.Sprintf("/%d", ip.Prefix)
+	str += fmt.Sprintf("/%d", ip.Suffix)
 	return str
 }
 
@@ -44,7 +44,7 @@ func (ip *IP) Show() {
 			print(ip.v[i])
 		}
 	}
-	println("/", ip.Prefix)
+	println("/", ip.Suffix)
 }
 
 func SetStartingIP(ipIn []int, p int) {
@@ -53,7 +53,7 @@ func SetStartingIP(ipIn []int, p int) {
 		m[i] = ipIn[i]
 	}
 	StartingIP.v = m
-	StartingIP.Prefix = p
+	StartingIP.Suffix = p
 
 	r := networkAddress(p)
 	for i := 0; i < 4; i++ {
@@ -64,7 +64,7 @@ func SetStartingIP(ipIn []int, p int) {
 
 func CalculateSubnet(requiredHosts int) Data {
 	var result Data
-	if int(math.Pow(2, float64(32-StartingIP.Prefix))) < requiredHosts {
+	if int(math.Pow(2, float64(32-StartingIP.Suffix))) < requiredHosts {
 		return Data{Message: "Could not fit in"}
 	}
 	logOfHosts := logOfHosts(requiredHosts)
@@ -103,7 +103,7 @@ func toIp(ipIn []int, prefix int) IP {
 	}
 	return IP{
 		v:      m,
-		Prefix: prefix,
+		Suffix: prefix,
 	}
 }
 
