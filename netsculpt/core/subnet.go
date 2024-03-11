@@ -77,7 +77,7 @@ func CalculateSubnet(requiredHosts int) Data {
 }
 
 func logOfHosts(hosts int) int {
-	return int(math.Ceil(math.Log2(float64(hosts + 2))))
+	return int(math.Ceil(math.Log2(float64(hosts))))
 }
 
 func sizeOfNetwork(logOfHosts int) int {
